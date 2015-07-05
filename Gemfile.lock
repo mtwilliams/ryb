@@ -1,0 +1,19 @@
+PATH
+  remote: .
+  specs:
+    ryb (0.1.0.dev)
+      gli
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    gli (2.13.1)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  ryb!
+
+BUNDLED WITH
+   1.10.5
