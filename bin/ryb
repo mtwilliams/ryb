@@ -8,6 +8,7 @@ require 'docile'
 require 'ryb'
 # TODO(mtwilliams): Refactor into Ryb::CLI/Ryb::Runner.
 # require 'ryb/cli'
+require 'rybfile'
 
 include GLI::App
 
@@ -28,7 +29,11 @@ command [:g, :gen, :generate] do |c|
     # TODO(mtwilliams): Sanity checks on `args'.
     toolset = args.shift
     # TODO(mtwilliams): Custom exception types.
+    raise "No toolset specified!" if toolset.nil?
     raise "Unknown toolset `#{toolset}'!" unless Ryb::Toolsets.available?(toolset)
+    rybfile = args.shift || 'Rybfile'
+    raise "No such file `#{rybfile}' exists!" unless File.exists?(rybfile)
+    rybfile = Rybfile.load(rybfile)
     puts "Generating project file(s) for `#{toolset}'..."
     # ...
   end
