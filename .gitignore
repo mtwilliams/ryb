@@ -1,0 +1,5 @@
+# Sublime Text 2/3
+*.sublime-workspace
+
+# RubyGems
+*.gem
