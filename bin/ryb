@@ -2,8 +2,9 @@
 $:.push File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
 
 require 'rubygems'
-
 require 'gli'
+require 'docile'
+
 require 'ryb'
 # TODO(mtwilliams): Refactor into Ryb::CLI/Ryb::Runner.
 # require 'ryb/cli'
