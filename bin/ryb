@@ -34,6 +34,7 @@ command [:g, :gen, :generate] do |c|
     rybfile = args.shift || 'Rybfile'
     raise "No such file `#{rybfile}' exists!" unless File.exists?(rybfile)
     rybfile = Rybfile.load(rybfile)
+    puts rybfile.inspect
     puts "Generating project file(s) for `#{toolset}'..."
     # ...
   end

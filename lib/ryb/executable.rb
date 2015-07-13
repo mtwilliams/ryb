@@ -1,9 +1,8 @@
 module Ryb
-  class Project
+  class Executable
     attr_reader :name
     def initialize(desc={})
       @name = desc[:name]
-      @executables = desc[:executables]
     end
   end
 end
