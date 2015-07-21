@@ -1,5 +1,5 @@
 module Ryb
-  class Executable
+  class Library
     attr_reader :name
     def initialize(desc={})
       @name = desc[:name]

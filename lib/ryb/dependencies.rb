@@ -1,0 +1,2 @@
+require 'docile'
+require 'ostruct'
