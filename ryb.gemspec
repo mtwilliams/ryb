@@ -20,8 +20,9 @@ Gem::Specification.new do |s|
   # TODO(mtwilliams): Handle this gracefuly in `bin/ryb'.
   s.require_paths = %w(lib)
 
+  s.add_dependency 'facets'
   s.add_dependency 'gli'
-  s.add_dependency 'docile'
+  s.add_dependency 'xcodeproj'
 
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'cucumber'
