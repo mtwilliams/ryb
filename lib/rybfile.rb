@@ -1,9 +1,15 @@
 require 'ryb'
+require 'ostruct'
 
+# TODO(mtwilliams): Improve the handling of Rybfiles.
 module Rybfile
   def self.load(path)
-    procified = eval("Proc.new { #{File.read(path)} }")
-    rybfile = OpenStruct.new(Ryb::DomainSpecificLanguage.eval &procified)
-    return rybfile.freeze
+    begin
+      return OpenStruct.new(:project => eval(File.read(path), binding(), path)).freeze
+    rescue SignalException, SystemExit
+      raise
+    rescue SyntaxError, Exception => e
+      raise "Invalid Rybfile!\n #{path}\n #{e}"
+    end
   end
 end
