@@ -1,7 +1,9 @@
 module Ryb
   module VisualStudio
     POSSIBLE_INSTALL_DIRECTORY_REGISTRY_KEYS =
-      ["SOFTWARE\\Wow6432Node\\Microsoft\\VisualStudio\\12.0\\Setup\\VC",
+      ["SOFTWARE\\Wow6432Node\\Microsoft\\VisualStudio\\14.0\\Setup\\VC",
+       "SOFTWARE\\Microsoft\\VisualStudio\\14.0\\Setup\\VC",
+       "SOFTWARE\\Wow6432Node\\Microsoft\\VisualStudio\\12.0\\Setup\\VC",
        "SOFTWARE\\Microsoft\\VisualStudio\\12.0\\Setup\\VC",
        "SOFTWARE\\Wow6432Node\\Microsoft\\VCExpress\\12.0\\Setup\\VC",
        "SOFTWARE\\Microsoft\\VCExpress\\12.0\\Setup\\VC",
