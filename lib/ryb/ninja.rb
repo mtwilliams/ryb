@@ -152,8 +152,10 @@ module Ryb
               end
             end
 
-            f.write ".PHONY: all #{targets.join(' ')}\n"
+            f.write ".PHONY: all clean #{targets.join(' ')}\n"
             f.write "all: #{targets.join(' ')}\n\n"
+            f.write "clean: \n"
+            f.write "\t@rm -rf #{opts[:built]}\n\n"
 
             project.configurations.each do |_, config|
               [:windows].map{|target| project.targets[target]}.compact.each do |target|
