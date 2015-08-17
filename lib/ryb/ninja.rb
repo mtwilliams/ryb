@@ -27,7 +27,7 @@ module Ryb
               [:windows].map{|target| project.targets[target]}.compact.each do |target|
                 [:x86, :x86_64].map{|arch| project.architectures[arch]}.compact.each do |arch|
                   triplet = "#{config.name}_#{target.name}_#{arch.name}"
-                  (project.applications + project.libraries).each do |buildable|
+                  (project.applications+project.libraries).each do |buildable|
                     name = "#{buildable.name.pretty||buildable.name.capitalize} (#{config.name.pretty||config.name.capitalize}) for #{target.name.pretty||target.name.capitalize} (#{arch.name.pretty||arch.name.capitalize})"
                     puts " Adding '#{name}'..."
                     quadruplet = "#{buildable.name}_#{triplet}"
@@ -93,16 +93,32 @@ module Ryb
                     outputs_to_inputs = Hash[sources.map{|source| ["${built}/obj/#{source.gsub(/\.[^.]+\z/,'')}.#{triplet}.obj", "${root}/#{source}"]}]
                     build "cc_#{quadruplet}", outputs_to_inputs
                     output = "#{buildable.name}${#{quadruplet}_suffix}"
+                    inputs = outputs_to_inputs.map{|object,_| object}
+                    dependencies = []
+                    buildable.dependencies.each do |dependency|
+                      dependency = (project.libraries.select{|buildable| buildable.name == dependency}).first
+                      if dependency
+                        case dependency.linkage
+                          when :static
+                            dependencies.push("${built}/lib/#{dependency.name}${#{dependency.name}_#{triplet}_suffix}.lib")
+                          when :dynamic
+                            # TODO(mtwilliams): Move import libraries to ${built}/lib.
+                            dependencies.push("${built}/bin/#{dependency.name}${#{dependency.name}_#{triplet}_suffix}.lib")
+                          end
+                      else
+                        raise "Not implemented, yet!"
+                      end
+                    end
                     if buildable.is_a? Ryb::Application
-                      build "ld_#{quadruplet}", "${built}/bin/#{output}.exe" => outputs_to_inputs.map{|object,_| object}
+                      build "ld_#{quadruplet}", "${built}/bin/#{output}.exe" => inputs+dependencies
                       defaults "${built}/bin/#{output}.exe"
                     elsif buildable.is_a? Ryb::Library
                       case buildable.linkage
                       when :static
-                        build "ar_#{quadruplet}", "${built}/lib/#{output}.lib" => outputs_to_inputs.map{|object,_| object}
+                        build "ar_#{quadruplet}", "${built}/lib/#{output}.lib" => inputs
                       when :dynamic
                         # TODO(mtwilliams): Specify -DLL.
-                        build "ld_#{quadruplet}", "${built}/bin/#{output}.dll" => outputs_to_inputs.map{|object,_| object}
+                        build "ld_#{quadruplet}", "${built}/bin/#{output}.dll" => inputs+dependencies
                       end
                     end
                   end
