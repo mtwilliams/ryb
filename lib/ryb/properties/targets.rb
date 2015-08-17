@@ -14,13 +14,14 @@ module Ryb
         end
 
         def target(name, &block)
-          arch = {:windows => Ryb::Targets::Windows,
-                  :macosx => Ryb::Targets::MacOSX,
-                  :linux => Ryb::Targets::Linux}[name].new(&block)
-          targets.merge!(name => arch) do |_, *targets|
+          target = {:windows => Ryb::Targets::Windows,
+                    :macosx => Ryb::Targets::MacOSX,
+                    :linux => Ryb::Targets::Linux}[name].new(&block)
+          targets.merge!(name => target) do |_, *targets|
             targets[0].instance_variable_set(:@version, targets[1].instance_variable_get(:@version))
             targets[0].suffix ||= targets[1].suffix
             targets[0].defines.merge!(targets[1].defines)
+            targets[0].flags.merge!(targets[1].flags)
             targets[0]
           end
         end

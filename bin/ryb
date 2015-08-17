@@ -5,6 +5,7 @@ require 'rubygems'
 require 'facets'
 require 'gli'
 require 'xcodeproj'
+require 'ninja'
 
 require 'ryb'
 # TODO(mtwilliams): Refactor into Ryb::Runner.
@@ -30,14 +31,14 @@ command [:g, :gen, :generate] do |c|
     toolset = args.shift
     # TODO(mtwilliams): Custom exception types.
     raise "No toolset specified!" if toolset.nil?
-    raise "Unknown toolset `#{toolset}'!" unless %w{xcode}.include? toolset
+    raise "Unknown toolset `#{toolset}'!" unless %w{ninja}.include? toolset
     rybfile = args.shift || 'Rybfile'
     raise "No such file `#{rybfile}' exists!" unless File.exists?(rybfile)
     rybfile = Rybfile.load(rybfile)
     puts "Generating project file(s) for `#{toolset}'..."
     case toolset
-    when 'xcode'
-      Ryb::XCode.generate_project_files_for rybfile.project, built: '_build'
+    when 'ninja'
+      Ryb::Ninja.generate_build_file_for rybfile.project, root: '.', built: '_build'
     end
   end
 end

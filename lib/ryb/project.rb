@@ -11,6 +11,7 @@ module Ryb
     include Properties::Named
     include Properties::Defines
     include Properties::Flags
+    include Properties::Paths
     include Properties::Architectures
     include Properties::Targets
     include Properties::Configurations

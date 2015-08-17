@@ -23,6 +23,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'facets'
   s.add_dependency 'gli'
   s.add_dependency 'xcodeproj'
+  s.add_dependency 'ninja-gen'
 
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'cucumber'
