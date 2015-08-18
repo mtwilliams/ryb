@@ -96,17 +96,18 @@ module Ryb
                     inputs = outputs_to_inputs.map{|object,_| object}
                     dependencies = []
                     buildable.dependencies.each do |dependency|
-                      dependency = (project.libraries.select{|buildable| buildable.name == dependency}).first
-                      if dependency
-                        case dependency.linkage
+                      as_buildable = (project.libraries.select{|buildable| buildable.name == dependency}).first
+                      if as_buildable
+                        case as_buildable.linkage
                           when :static
-                            dependencies.push("${built}/lib/#{dependency.name}${#{dependency.name}_#{triplet}_suffix}.lib")
+                            dependencies.push("${built}/lib/#{as_buildable.name}${#{as_buildable.name}_#{triplet}_suffix}.lib")
                           when :dynamic
                             # TODO(mtwilliams): Move import libraries to ${built}/lib.
-                            dependencies.push("${built}/bin/#{dependency.name}${#{dependency.name}_#{triplet}_suffix}.lib")
+                            dependencies.push("${built}/bin/#{as_buildable.name}${#{as_buildable.name}_#{triplet}_suffix}.lib")
                           end
                       else
-                        raise "Not implemented, yet!"
+                        # TODO(mtwilliams): Check search paths for the existence of the library.
+                        dependencies.push(dependency)
                       end
                     end
                     if buildable.is_a? Ryb::Application
