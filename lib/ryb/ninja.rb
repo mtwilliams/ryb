@@ -89,29 +89,41 @@ module Ryb
                          "${link} /nologo /manifest:no ${#{quadruplet}_ldflags} /OUT:$out $in"
                     rule "ar_#{quadruplet}",
                          "${lib} /nologo ${#{quadruplet}_arflags} /OUT:$out $in"
-                    sources = buildable.files[:source].select{|file| /\.(c|cc|cpp)\z/.match(file)}
+                    sources = []
+                    dependencies = []
+                    if buildable.configurations[config.name]
+                      sources = buildable.configurations[config.name].files[:source] | buildable.files[:source]
+                      dependencies = buildable.configurations[config.name].dependencies | buildable.dependencies
+                    else
+                      sources = buildable.files[:source]
+                      dependencies = buildable.dependencies
+                    end
+                    sources = arch.files[:source] | target.files[:source] | config.files[:source] | sources
+                    dependencies = arch.dependencies | target.dependencies | config.dependencies | dependencies
+                    # TODO(mtwilliams): Handle C#.
+                    sources = sources.select{|file| /\.(c|cc|cpp)\z/.match(file)}
                     outputs_to_inputs = Hash[sources.map{|source| ["${built}/obj/#{source.gsub(/\.[^.]+\z/,'')}.#{triplet}.obj", "${root}/#{source}"]}]
                     build "cc_#{quadruplet}", outputs_to_inputs
                     output = "#{buildable.name}${#{quadruplet}_suffix}"
                     inputs = outputs_to_inputs.map{|object,_| object}
-                    dependencies = []
-                    buildable.dependencies.each do |dependency|
+                    link_to = []
+                    dependencies.each do |dependency|
                       as_buildable = (project.libraries.select{|buildable| buildable.name == dependency}).first
                       if as_buildable
                         case as_buildable.linkage
                           when :static
-                            dependencies.push("${built}/lib/#{as_buildable.name}${#{as_buildable.name}_#{triplet}_suffix}.lib")
+                            link_to.push("${built}/lib/#{as_buildable.name}${#{as_buildable.name}_#{triplet}_suffix}.lib")
                           when :dynamic
                             # TODO(mtwilliams): Move import libraries to ${built}/lib.
-                            dependencies.push("${built}/bin/#{as_buildable.name}${#{as_buildable.name}_#{triplet}_suffix}.lib")
+                            link_to.push("${built}/bin/#{as_buildable.name}${#{as_buildable.name}_#{triplet}_suffix}.lib")
                           end
                       else
                         # TODO(mtwilliams): Check search paths for the existence of the library.
-                        dependencies.push(dependency)
+                        link_to.push(dependency)
                       end
                     end
                     if buildable.is_a? Ryb::Application
-                      build "ld_#{quadruplet}", "${built}/bin/#{output}.exe" => inputs+dependencies
+                      build "ld_#{quadruplet}", "${built}/bin/#{output}.exe" => inputs+link_to
                       defaults "${built}/bin/#{output}.exe"
                     elsif buildable.is_a? Ryb::Library
                       case buildable.linkage
@@ -119,7 +131,7 @@ module Ryb
                         build "ar_#{quadruplet}", "${built}/lib/#{output}.lib" => inputs
                       when :dynamic
                         # TODO(mtwilliams): Specify -DLL.
-                        build "ld_#{quadruplet}", "${built}/bin/#{output}.dll" => inputs+dependencies
+                        build "ld_#{quadruplet}", "${built}/bin/#{output}.dll" => inputs+link_to
                       end
                     end
                   end

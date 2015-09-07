@@ -22,6 +22,8 @@ module Ryb
             targets[0].suffix ||= targets[1].suffix
             targets[0].defines.merge!(targets[1].defines)
             targets[0].flags.merge!(targets[1].flags)
+            targets[0].files[:source] = targets[0].files[:source] | targets[1].files[:source]
+            targets[0].instance_variable_set(:@dependencies, targets[0].dependencies | targets[1].dependencies)
             targets[0]
           end
         end

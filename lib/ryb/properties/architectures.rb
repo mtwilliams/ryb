@@ -18,6 +18,8 @@ module Ryb
           architectures.merge!(name => arch) do |_, *archs|
             archs[0].suffix ||= archs[1].suffix
             archs[0].defines.merge!(archs[1].defines)
+            archs[0].files[:source] = archs[0].files[:source] | archs[1].files[:source]
+            archs[0].instance_variable_set(:@dependencies, archs[0].dependencies | archs[1].dependencies)
             archs[0]
           end
         end

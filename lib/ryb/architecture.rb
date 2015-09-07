@@ -7,6 +7,8 @@ module Ryb
     include Properties::Suffix
     include Properties::Defines
     include Properties::Flags
+    include Properties::Files
+    include Properties::Dependencies
 
     def initialize(name, opts={})
       @name = Name.new(name, opts[:pretty])

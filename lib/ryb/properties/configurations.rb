@@ -15,6 +15,8 @@ module Ryb
             configs[0].suffix ||= configs[1].suffix
             configs[0].defines.merge!(configs[1].defines)
             configs[0].instance_variable_set(:@flags, configs[1].instance_variable_get(:@flags))
+            configs[0].files[:source] = configs[0].files[:source] | configs[1].files[:source]
+            configs[0].instance_variable_set(:@dependencies, configs[0].dependencies | configs[1].dependencies)
             configs[0]
           end
         end
