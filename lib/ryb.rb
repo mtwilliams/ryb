@@ -1,4 +1,5 @@
 require 'rbconfig'
+require 'hashie'
 
 module Ryb
   def self.platform

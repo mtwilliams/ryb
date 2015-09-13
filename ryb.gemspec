@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'facets'
   s.add_dependency 'gli'
+  s.add_dependency 'hashie'
   s.add_dependency 'xcodeproj'
   s.add_dependency 'ninja-gen'
 

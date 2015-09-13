@@ -23,21 +23,30 @@ program_long_desc spec.description
 desc 'Generate project file(s)'
 # TODO(mtwilliams): Improve command-specific help.
 long_desc 'Generates project files for a specific toolset based on a Rybfile.'
-command [:g, :gen, :generate] do |c|
-  c.desc 'Automatically regenerate project file(s)'
-
-  c.action do |global_opts, opts, args|
+command [:g, :gen, :generate] do |generate|
+  generate.action do |global_opts, opts, args|
     # TODO(mtwilliams): Sanity checks on `args'.
     toolset = args.shift
     # TODO(mtwilliams): Custom exception types.
     raise "No toolset specified!" if toolset.nil?
-    raise "Unknown toolset `#{toolset}'!" unless %w{ninja}.include? toolset
-    rybfile = args.shift || 'Rybfile'
-    raise "No such file `#{rybfile}' exists!" unless File.exists?(rybfile)
-    rybfile = Rybfile.load(rybfile)
-    puts "Generating project file(s) for `#{toolset}'..."
-    case toolset
-    when 'ninja'
+    raise "Unknown toolset `#{toolset}'!"
+  end
+
+  # TODO(mtwilliams): Make a local option.
+  # TODO(mtwilliams): Rename to 'for', i.e: ryb g nina --for vs2015
+  desc 'Generate a build.ninja file'
+  long_desc 'Generates a build.ninja file for a specific toolchain based on a Rybfile.'
+  flag 'using', :default_value => 'latest',
+                      :type => String,
+                      :arg_name => 'using',
+                      :desc => 'The toolchain to use'
+  generate.command :ninja do |ninja|
+    ninja.action do |global_opts, opts, args|
+      # TODO(mtwilliams): Sanity checks on `args'.
+      rybfile = args.shift || 'Rybfile'
+      raise "No such file `#{rybfile}' exists!" unless File.exists?(rybfile)
+      rybfile = Rybfile.load(rybfile)
+      puts "Generating project file(s) for Ninja..."
       Ryb::Ninja.generate_build_file_for rybfile.project, root: '.', built: '_build'
     end
   end
