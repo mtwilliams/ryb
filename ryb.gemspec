@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.email             = 'm.t.williams@live.com'
   s.homepage          = 'https://RubifyYourBuild.com/'
   s.summary           = 'Rubify Your Build!'
-  s.description       = 'Ryb is a clean and extensible Ruby DSL for generating project files.'
+  s.description       = 'Ryb is a clean and extensible Ruby library that generates build files for Visual Studio, XCode, Make, and Ninja.'
   s.license           = 'Public Domain'
 
   s.required_ruby_version = '>= 1.9.3'
@@ -20,11 +20,7 @@ Gem::Specification.new do |s|
   # TODO(mtwilliams): Handle this gracefuly in `bin/ryb'.
   s.require_paths = %w(lib)
 
-  s.add_dependency 'facets'
   s.add_dependency 'gli'
-  s.add_dependency 'hashie'
-  s.add_dependency 'xcodeproj'
-  s.add_dependency 'ninja-gen'
 
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'cucumber'
