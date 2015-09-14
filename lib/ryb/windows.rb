@@ -137,7 +137,7 @@ module Ryb
                              supports: [:x86, :x86_64, :arm])
           else
             if version.to_f <= 7.0
-              raise "Ryb does not support older Windows SDK, nor does Microsoft."
+              raise "Ryb does not support older Windows SDKs. Microsoft doesn't either."
             else
               raise "I thought Windows 10 was the last version!"
             end
