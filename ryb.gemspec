@@ -17,7 +17,6 @@ Gem::Specification.new do |s|
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
-  # TODO(mtwilliams): Handle this gracefuly in `bin/ryb'.
   s.require_paths = %w(lib)
 
   s.add_dependency 'gli'

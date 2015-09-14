@@ -1,55 +1,6 @@
 #!/usr/bin/env ruby
+
 $:.push File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
-
-require 'rubygems'
-require 'facets'
-require 'gli'
-require 'xcodeproj'
-require 'ninja'
-
 require 'ryb'
-# TODO(mtwilliams): Refactor into Ryb::Runner.
-require 'rybfile'
 
-include GLI::App
-
-# TODO(mtwilliams): Refactor this ugliness into lib/ryb.rb?
-spec = Gem::Specification::load(File.expand_path(File.join(File.dirname(__FILE__), '..', 'ryb.gemspec')))
-# program_name spec.name
-version spec.version.to_s
-program_desc spec.summary
-program_long_desc spec.description
-
-desc 'Generate project file(s)'
-# TODO(mtwilliams): Improve command-specific help.
-long_desc 'Generates project files for a specific toolset based on a Rybfile.'
-command [:g, :gen, :generate] do |generate|
-  generate.action do |global_opts, opts, args|
-    # TODO(mtwilliams): Sanity checks on `args'.
-    toolset = args.shift
-    # TODO(mtwilliams): Custom exception types.
-    raise "No toolset specified!" if toolset.nil?
-    raise "Unknown toolset `#{toolset}'!"
-  end
-
-  # TODO(mtwilliams): Make a local option.
-  # TODO(mtwilliams): Rename to 'for', i.e: ryb g nina --for vs2015
-  desc 'Generate a build.ninja file'
-  long_desc 'Generates a build.ninja file for a specific toolchain based on a Rybfile.'
-  flag 'using', :default_value => nil,
-                :type => String,
-                :arg_name => 'using',
-                :desc => 'The toolchain to use'
-  generate.command :ninja do |ninja|
-    ninja.action do |global_opts, opts, args|
-      # TODO(mtwilliams): Sanity checks on `args'.
-      rybfile = args.shift || 'Rybfile'
-      raise "No such file `#{rybfile}' exists!" unless File.exists?(rybfile)
-      rybfile = Rybfile.load(rybfile)
-      puts "Generating project file(s) for Ninja..."
-      Ryb::Ninja.generate_build_file_for rybfile.project, root: '.', built: '_build', using: global_opts[:using]
-    end
-  end
-end
-
-exit run(ARGV)
+exit Ryb::CommandLineInterface.run(ARGV)
