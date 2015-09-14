@@ -7,7 +7,8 @@ module Ryb
     def self.generate_build_file_for(project, opts={})
       case Ryb.platform
         when :windows
-          visual_studio = (Ryb::VisualStudio::VERSIONS.map{|version| Ryb::VisualStudio.find_by_version(version)}).first
+          versions = [*(opts[:using] || Ryb::VisualStudio::VERSIONS)]
+          visual_studio = (versions.map{|version| Ryb::VisualStudio.find(version)}).first
           raise 'Unable to find Visual Studio.' unless visual_studio
           raise 'Unable to find Windows SDK.' if visual_studio.sdks.windows.empty?
           windows_sdk = visual_studio.sdks.windows.first

@@ -1,14 +1,16 @@
 module Ryb
   module VisualStudio
-    NAMES = [Ryb::Name.new('vs2015', pretty: 'Visual Studio 2015'),
-             Ryb::Name.new('vs2013', pretty: 'Visual Studio 2013'),
-             Ryb::Name.new('vs2012', pretty: 'Visual Studio 2012'),
-             Ryb::Name.new('vs2010', pretty: 'Visual Studio 2010'),
-             Ryb::Name.new('vs2008', pretty: 'Visual Studio 2008'),
-             Ryb::Name.new('vs2005', pretty: 'Visual Studio 2005'),
-             Ryb::Name.new('vs2003', pretty: 'Visual Studio .NET 2003'),
-             Ryb::Name.new('vs2003', pretty: 'Visual Studio .NET 2002'),
-             Ryb::Name.new('vs6',    pretty: 'Visual Studio 6.0')]
+    NAMES = ['vs2015', 'vs2013', 'vs2012', 'vs2010', 'vs2008', 'vs2005', 'vs2003', 'vs2003', 'vs6']
+
+    PRETTY_NAMES = ['Visual Studio 2015',
+                    'Visual Studio 2013',
+                    'Visual Studio 2012',
+                    'Visual Studio 2010',
+                    'Visual Studio 2008',
+                    'Visual Studio 2005',
+                    'Visual Studio .NET 2003',
+                    'Visual Studio .NET 2002',
+                    'Visual Studio 6.0']
 
     VERSIONS = %w{14.0 12.0 11.0 10.0 9.0 8.0 7.1 7.0 6.0}
 
@@ -24,6 +26,7 @@ module Ryb
 
     NAME_TO_VERSION = Hash[NAMES.zip(VERSIONS)]
     VERSION_TO_NAME = Hash[VERSIONS.zip(NAMES)]
+    VERSION_TO_PRETTY_NAME = Hash[VERSIONS.zip(PRETTY_NAMES)]
     VERSION_TO_SDKS = Hash[VERSIONS.zip(SDKS)]
 
     class Install
@@ -69,7 +72,7 @@ module Ryb
         end
 
         # TODO(mtwilliams): Cache.
-        VisualStudio::Install.new(name: VERSION_TO_NAME[version],
+        VisualStudio::Install.new(name: Ryb::Name.new(VERSION_TO_NAME[version], pretty: VERSION_TO_PRETTY_NAME[version]),
                                   version: version,
                                   root: install,
                                   toolsets: Hashie::Mash.new({
@@ -84,15 +87,17 @@ module Ryb
         def self._find_install_via_registry(version)
           # TODO(mtwilliams): Try other products, like C#.
           keys = ["SOFTWARE\\Wow6432Node\\Microsoft\\VisualStudio\\#{version}\\Setup\\VC",
-                  "SOFTWARE\\Microsoft\\VisualStudio\\#{version}\\Setup\\VC"]
-          keys.each do |key|
+                  "SOFTWARE\\Microsoft\\VisualStudio\\#{version}\\Setup\\VC",
+                  "SOFTWARE\\Wow6432Node\\Microsoft\\VCExpress\\#{version}\\Setup\\VC",
+                  "SOFTWARE\\Microsoft\\VCExpress\\#{version}\\Setup\\VC"]
+          installs = keys.map do |key|
             begin
               require 'win32/registry'
               return File.expand_path(File.join(::Win32::Registry::HKEY_LOCAL_MACHINE.open(key, ::Win32::Registry::KEY_READ)['ProductDir'], '..')).to_s
             rescue
             end
           end
-          return nil
+          installs.compact.first
         end
     end
 

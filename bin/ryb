@@ -36,10 +36,10 @@ command [:g, :gen, :generate] do |generate|
   # TODO(mtwilliams): Rename to 'for', i.e: ryb g nina --for vs2015
   desc 'Generate a build.ninja file'
   long_desc 'Generates a build.ninja file for a specific toolchain based on a Rybfile.'
-  flag 'using', :default_value => 'latest',
-                      :type => String,
-                      :arg_name => 'using',
-                      :desc => 'The toolchain to use'
+  flag 'using', :default_value => nil,
+                :type => String,
+                :arg_name => 'using',
+                :desc => 'The toolchain to use'
   generate.command :ninja do |ninja|
     ninja.action do |global_opts, opts, args|
       # TODO(mtwilliams): Sanity checks on `args'.
@@ -47,7 +47,7 @@ command [:g, :gen, :generate] do |generate|
       raise "No such file `#{rybfile}' exists!" unless File.exists?(rybfile)
       rybfile = Rybfile.load(rybfile)
       puts "Generating project file(s) for Ninja..."
-      Ryb::Ninja.generate_build_file_for rybfile.project, root: '.', built: '_build'
+      Ryb::Ninja.generate_build_file_for rybfile.project, root: '.', built: '_build', using: global_opts[:using]
     end
   end
 end
