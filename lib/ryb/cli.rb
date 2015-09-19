@@ -22,7 +22,7 @@ module Ryb
       end
 
       # # TODO(mtwilliams): Make a local option.
-      # # TODO(mtwilliams): Rename to 'for', i.e: ryb g nina --for vs2015
+      # # TODO(mtwilliams): Rename to 'for', i.e: ryb g ninja --for vs2015/8.1
       # desc 'Generate a build.ninja file'
       # long_desc 'Generates a build.ninja file for a specific toolchain based on a Rybfile.'
       # flag 'using', :default_value => nil,

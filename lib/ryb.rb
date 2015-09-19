@@ -4,4 +4,5 @@ module Ryb
   require 'ryb/cli'
 
   require 'ryb/windows'
+  require 'ryb/visual_studio'
 end
