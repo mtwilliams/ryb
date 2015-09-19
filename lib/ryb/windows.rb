@@ -129,7 +129,7 @@ module Ryb
                             :arm => [File.expand_path(File.join(root, 'bin', 'arm'))]}
 
             Windows::SDK.new(name: name,
-                             version: version,
+                             version: '10.0',
                              root: root,
                              includes: includes,
                              libraries: libraries,
