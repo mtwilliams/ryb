@@ -146,6 +146,10 @@ module Ryb
         end
     end
 
+    def self.available?
+      VisualStudio::VERSIONS.any?{|version| VisualStudio.installed?(version)}
+    end
+
     def self.installed?(name_or_version)
       !!(find(name_or_version))
     end
