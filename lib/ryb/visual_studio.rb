@@ -153,5 +153,9 @@ module Ryb
     def self.installed?(name_or_version)
       !!(find(name_or_version))
     end
+
+    def self.latest
+      VisualStudio::VERSIONS.map{|version| VisualStudio::Install.find(version)}.compact.first
+    end
   end
 end
