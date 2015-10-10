@@ -19,7 +19,8 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = %w(lib)
 
-  s.add_dependency 'gli'
+  s.add_dependency 'gli', '~> 2'
+  s.add_dependency 'visual_studio', '~> 0.1'
 
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'cucumber'
