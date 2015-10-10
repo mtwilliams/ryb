@@ -1,16 +1,16 @@
 $:.push File.expand_path(File.join(File.dirname(__FILE__), 'lib'))
-require 'ryb/version'
+require 'ryb/gem'
 
 Gem::Specification.new do |s|
-  s.name              = 'ryb'
-  s.version           = Ryb.version
+  s.name              = Ryb::Gem.name
+  s.version           = Ryb::Gem.version
   s.platform          = Gem::Platform::RUBY
-  s.author            = 'Michael Williams'
-  s.email             = 'm.t.williams@live.com'
-  s.homepage          = 'https://RubifyYourBuild.com/'
-  s.summary           = 'Rubify Your Build!'
-  s.description       = 'Ryb is a clean and extensible Ruby library that generates build files for Visual Studio, XCode, Make, and Ninja.'
-  s.license           = 'Public Domain'
+  s.author            = Ryb::Gem.author.name
+  s.email             = Ryb::Gem.author.email
+  s.homepage          = Ryb::Gem.homepage
+  s.summary           = Ryb::Gem.summary
+  s.description       = Ryb::Gem.description
+  s.license           = Ryb::Gem.license
 
   s.required_ruby_version = '>= 1.9.3'
 
