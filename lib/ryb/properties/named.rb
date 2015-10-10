@@ -8,7 +8,7 @@ module Ryb
         attr_reader :name
       end
 
-      def self.merge(lhs, rhs)
+      def self.merge!(lhs, rhs)
         # TODO(mtwilliams): raise Ryb::Error::Unmergable.new(...)
         raise "Unable to reconcile a difference in names." unless lhs.name == rhs.name
       end

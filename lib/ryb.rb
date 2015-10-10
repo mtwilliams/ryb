@@ -4,6 +4,7 @@ module Ryb
 
   require 'ryb/helpers/pretty_string'
 
+  require 'ryb/propertied'
   require 'ryb/properties/named'
 
   require 'ryb/project'
