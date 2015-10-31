@@ -26,6 +26,7 @@ module Ryb
         desc 'Generate Visual Studio project files'
         long_desc 'Generates Visual Studio projects files, based on a Rybfile.'
         vs.action do |global_opts, opts, args|
+          rybfile = Rybfile.load(args.unshift || "Rybfile")
           raise "Not implemented, yet."
         end
       end
@@ -39,7 +40,7 @@ module Ryb
         end
       end
 
-      gen.command :make do |make|
+      gen.command :gmake do |make|
         # BUG(mtwilliams): Descriptions aren't being made available.
         make.desc 'Generate GNU Makefiles'
         make.long_desc 'Generates GNU Makefiles, based on a Rybfile.'

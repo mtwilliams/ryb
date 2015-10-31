@@ -1,10 +1,11 @@
 module Ryb
-  class Project
-    include Ryb::Properties::Named
+  class Project < Pour::Concrete
+    property :name, Typespec.t[Ryb::Name]
 
-    def initialize(name, opts={})
-      @name = Helpers::PrettyString.new(name, pretty: opts[:pretty])
-      yield self if block_given?
-    end
+    pour Configurations
+    pour Enviornment
+    pour Preprocessor
+
+    property :products, Typespec.array[Typespec.t[Ryb::Product]]
   end
 end

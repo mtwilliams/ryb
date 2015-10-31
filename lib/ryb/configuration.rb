@@ -1,11 +1,20 @@
 module Ryb
-  class Configuration
-    include Ryb::Propertied
-    property :named
+  class Configuration < Pour::Concrete
+    property :name, Typespec.t[Ryb::Name]
 
-    def initialize(name, opts={})
-      @name = Helpers::PrettyString.new(name, pretty: opts[:pretty])
-      yield self if block_given?
-    end
+    property :prefix, Typespec.string
+    property :suffix, Typespec.string
+
+    pour Enviornment
+    pour Preprocessor
+    pour Flags
+    pour Code
+    pour Dependencies
+  end
+
+  class Platform < Configuration
+  end
+
+  class Architecture < Configuration
   end
 end
