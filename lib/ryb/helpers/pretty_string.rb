@@ -21,7 +21,8 @@ module Ryb
       #   greeting_1 = PrettyString.new('greeting', pretty: 'Eh!')
       #   greeting_2 = PrettyString.new('greeting', pretty: 'Aloha!')
       #   greeting_1 == greeting_2 #=> true
-      def eql?(other)
+      alias :eql? :==
+      def ==(other)
         if other.is_a? String
           self.to_s == other.to_s
         else
