@@ -14,6 +14,16 @@ module Ryb
     program_desc      Ryb::Gem.summary
     program_long_desc Ryb::Gem.description
 
+    desc ''
+    flag [:root], :default_value => './'
+
+    desc ''
+    flag [:build], :default_value => '_build/'
+
+  # TODO(mtwilliams): Use a proper logger.
+  # switch :verbose, :default => false,
+  #                  :negatable => false
+
     desc 'Generate project file(s)'
     long_desc 'Generates project files for a specific toolset, based on a Rybfile.'
     command [:g, :gen, :generate] do |gen|
