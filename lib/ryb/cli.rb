@@ -1,4 +1,8 @@
 module Ryb
+  # TODO(mtwilliams): Collate these somewhere else.
+  PLATFORMS = %w{windows macosx linux}
+  TOOLCHAINS = %w{msvc clang+llvm gcc}
+
   module CommandLineInterface
     # TODO(mtwilliams): Look into using Thor?
     require 'gli'
