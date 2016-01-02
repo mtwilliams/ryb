@@ -1,6 +1,6 @@
 module Ryb
-  class Configuration < Pour::Concrete
-    property :name, Typespec.t[Ryb::Name]
+  class Configuration < Pour::Mould
+    property :name, Typespec.t[Name]
 
     property :prefix, Typespec.string
     property :suffix, Typespec.string
@@ -8,7 +8,9 @@ module Ryb
     pour Enviornment
     pour Preprocessor
     pour Flags
+
     pour Code
+
     pour Dependencies
   end
 

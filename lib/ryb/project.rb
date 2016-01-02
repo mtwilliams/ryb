@@ -1,5 +1,5 @@
 module Ryb
-  class Project < Pour::Concrete
+  class Project < Pour::Mould
     property :name, Typespec.t[Ryb::Name]
 
     pour Configurations

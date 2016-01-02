@@ -1,7 +1,7 @@
 module Ryb
   module Dependencies
-    include Pourable
+    include Pour::Pourable
 
-    property :dependencies, Typespec.array[Typespec.t[Ryb::Dependency]]
+    property :dependencies, Typespec.array[Typespec.t[Dependency]]
   end
 end

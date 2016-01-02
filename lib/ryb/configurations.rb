@@ -1,9 +1,9 @@
 module Ryb
   module Configurations
-    include Pourable
+    include Pour::Pourable
 
-    property :confiugurations, Typespec.array[Typespec.t[Ryb::Configuration]]
-    property :platforms,       Typespec.array[Typespec.t[Ryb::Platform]]
-    property :architectures,   Typespec.array[Typespec.t[Ryb::Architectures]]
+    property :confiugurations, Typespec.array[Typespec.t[Configuration]]
+    property :platforms,       Typespec.array[Typespec.t[Platform]]
+    property :architectures,   Typespec.array[Typespec.t[Architectures]]
   end
 end

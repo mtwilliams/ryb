@@ -1,5 +1,5 @@
 module Ryb
-  class Dependency < Pourable
+  class Dependency < Pour::Mould
   end
 
   class InternalDependency < Dependency

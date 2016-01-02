@@ -1,7 +1,7 @@
 module Ryb
   module Code
-    include Pourable
+    include Pour::Pourable
 
-    property :sources, Typespec.array[Typespec.t[Ryb::SourceFile]]
+    property :sources, Typespec.array[Typespec.t[SourceFile]]
   end
 end

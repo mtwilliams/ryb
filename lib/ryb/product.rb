@@ -1,5 +1,5 @@
 module Ryb
-  class Product < Pour::Concrete
+  class Product < Pour::Mould
     property :name, Typespec.t[Ryb::Name]
 
     property :author,      Typespec.string
@@ -15,7 +15,9 @@ module Ryb
     pour Enviornment
     pour Preprocessor
     pour Flags
+
     pour Code
+
     pour Dependencies
   end
 

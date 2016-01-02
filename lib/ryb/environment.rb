@@ -1,6 +1,6 @@
 module Ryb
   module Environment
-    include Pourable
+    include Pour::Pourable
 
     property :paths, Typespec.struct[:includes  => Typespec.array[Typespec.string],
                                      :libraries => Typespec.array[Typespec.string],

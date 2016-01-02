@@ -1,6 +1,6 @@
 module Ryb
   module Flags
-    include Pourable
+    include Pour::Pourable
 
     # Prevent code that raises warnings from succesfully compiling.
     property :treat_warnings_as_errors, Typespec.boolean

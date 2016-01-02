@@ -1,4 +1,6 @@
-class Rybfile < Pour::Concrete
+require 'ryb'
+
+class Rybfile < Pour::Mould
   property :project, Typespec.t[Ryb::Project]
 
   class DomainSpecificLanguage
