@@ -37,7 +37,7 @@ module Ryb
 
     # A full description of this Gem.
     def self.description
-      "Ryb is a clean and extensible Ruby library that generates build files for Visual Studio, XCode, Make, and Ninja."
+      "Ryb is a clean and extensible Ruby library and tool that generates build files for Visual Studio, XCode, Make, and Ninja."
     end
 
     module VERSION #:nodoc:

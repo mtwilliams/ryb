@@ -1,5 +1,5 @@
 module Ryb
-  class Name < Ryb::Helpers::PrettyString
+  class Name < Helpers::PrettyString
     def canonicalize
       self.to_s
     end

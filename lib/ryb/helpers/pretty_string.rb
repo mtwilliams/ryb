@@ -2,7 +2,7 @@ module Ryb
   module Helpers
     class PrettyString < String
       # @!attribute [r] pretty
-      #   @return [String] A more readable description of the string.
+      # @return [String] A more readable description of the string.
       attr_reader :pretty
 
       # @param [Hash] opts Optional arguments.
