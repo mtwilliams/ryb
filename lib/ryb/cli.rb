@@ -37,8 +37,8 @@ module Ryb
 
       gen.command :visual_studio do |vs|
         # BUG(mtwilliams): Descriptions aren't being made available.
-        desc 'Generate Visual Studio project files'
-        long_desc 'Generates Visual Studio projects files, based on a Rybfile.'
+        vs.desc 'Generate Visual Studio project files'
+        vs.long_desc 'Generates Visual Studio projects files, based on a Rybfile.'
         vs.action do |global_opts, opts, args|
           rybfile = Rybfile.load(args.unshift || "Rybfile")
           raise "Not implemented, yet."
@@ -50,15 +50,17 @@ module Ryb
         xcode.desc 'Generate XCode project files'
         xcode.long_desc 'Generates XCode projects files, based on a Rybfile.'
         xcode.action do |global_opts, opts, args|
+          rybfile = Rybfile.load(args.unshift || "Rybfile")
           raise "Not implemented, yet."
         end
       end
 
-      gen.command :gmake do |make|
+      gen.command :gmake do |gmake|
         # BUG(mtwilliams): Descriptions aren't being made available.
-        make.desc 'Generate GNU Makefiles'
-        make.long_desc 'Generates GNU Makefiles, based on a Rybfile.'
-        make.action do |global_opts, opts, args|
+        gmake.desc 'Generate GNU Makefiles'
+        gmake.long_desc 'Generates GNU Makefiles, based on a Rybfile.'
+        gmake.action do |global_opts, opts, args|
+          rybfile = Rybfile.load(args.unshift || "Rybfile")
           raise "Not implemented, yet."
         end
       end
