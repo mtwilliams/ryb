@@ -1,78 +1,46 @@
 module Ryb
   module DomainSpecificLanguage
-    module Project
-      def application(name, opts={}, &block)
-        app = Ryb::Application.new
-        app.name = Ryb::Name.new(name, :pretty => opts[:pretty])
-        DomainSpecificLanguage.for(app).eval(&block)
-      end
-
-      def library(name, opts={}, &block)
-        lib = Ryb::Library.new
-        lib.name = Ryb::Name.new(name, :pretty => opts[:pretty])
-        DomainSpecificLanguage.for(lib).eval(&block)
-      end
-    end
-
-    module Product
-      def author=(author)
-        @spec.author = author
-      end
-
-      def description=(description)
-        @spec.description = description
-      end
-
-      def license=(license)
-        @spec.license = license
-      end
-
-      def version=(version)
-        @spec.version = version
-      end
-    end
-
-    module Application
-    end
-
-    module Library
-      def linkage=(linkage)
-        @spec.linkage = linkage
-      end
-    end
-
     module Configurations
       def configuration(name, opts={}, &block)
-        config = Ryb::Configuration.new
-        config.name = Ryb::Name.new(name, :pretty => opts[:pretty])
+        # TODO(mtwilliams): Refactor this.
+        existing_config = @spec.configurations.select do |existing_config|
+          existing_config.name.canonicalize == name
+        end
+
+        config = existing_config || Ryb::Configuration.new
+        config.name ||= Ryb::Name.new(name, :pretty => opts[:pretty])
+
         DomainSpecificLanguage.for(config).eval(&block)
-
-        # Refactor this?
-        existing_config = (@spec.configurations.select { |existing_config|
-          existing_config.name.canonicalize == config.name
-        }).first
-
-        # TODO(mtwilliams): Merge.
-        config = existing_config.merge(config) if existing_config
-        @spec.configurations = config
       end
 
       def platform(name, opts={}, &block)
-        platform = Ryb::Platform.new
-        platform.name = Ryb::Name.new(name, :pretty =>)
+        # TODO(mtwilliams): Refactor this.
+        existing_platform = @spec.platforms.select do |existing_platform|
+          existing_platform.name.canonicalize == name
+        end
+
+        platform = existing_platform || Ryb::Platform.new
+        platform.name ||= Ryb::Name.new(name, :pretty => opts[:pretty])
+
         DomainSpecificLanguage.for(platform).eval(&block)
       end
 
       def architecture(name, opts={}, &block)
-        arch = Ryb::Architecture.new
-        arch.name = Ryb::Name.new(name, :pretty =>)
+        # TODO(mtwilliams): Refactor this.
+        existing_arch = @spec.architectures.select do |existing_arch|
+          existing_arch.name.canonicalize == name
+        end
+
+        arch = existing_arch || Ryb::Architecture.new
+        arch.name ||= Ryb::Name.new(name, :pretty => opts[:pretty])
+
         DomainSpecificLanguage.for(arch).eval(&block)
       end
     end
 
-    module Environment
+     module Environment
       def add_include_path(path)
-        @spec.paths.includes = @spec.paths.includes | path
+        @spec.paths.includes = @spec.paths.includes + path
       end
 
       def add_include_paths(paths_and_patterns)
@@ -84,7 +52,7 @@ module Ryb
       end
 
       def add_library_path(path)
-        @spec.paths.libraries = @spec.paths.libraries | path
+        @spec.paths.libraries = @spec.paths.libraries + path
       end
 
       def add_library_paths(paths_and_patterns)
@@ -96,7 +64,7 @@ module Ryb
       end
 
       def add_binary_path(path)
-        @spec.paths.binaries = @spec.paths.binaries | path
+        @spec.paths.binaries = @spec.paths.binaries + path
       end
 
       def add_binary_paths(paths_and_patterns)
@@ -110,7 +78,7 @@ module Ryb
 
     module Preprocessor
       def define(defines)
-        @spec.defines = @spec.defines | defines
+        @spec.defines = @spec.defines + defines
       end
     end
 
@@ -132,9 +100,33 @@ module Ryb
       end
     end
 
+    module Code
+      def add_source_file(file)
+        case file
+          when String
+            @spec.sources = @spec.sources + SourceFile.new(file)
+          when SourceFile
+            @spec.sources = @spec.sources + file
+          end
+      end
+
+      def add_source_files(files_and_patterns)
+        [*files_and_patterns].each do |file_or_pattern|
+          case file_or_pattern
+            when String
+              [*(Dir.glob(file_or_pattern))].each do |file|
+                add_source_file(file)
+              end
+            when SourceFile
+              add_source_file(file_or_pattern)
+            end
+        end
+      end
+    end
+
     module Dependencies
       def add_dependency(product)
-        @spec.dependencies = @spec.dependencies | Ryb::InternalDependency.new(product)
+        @spec.dependencies = @spec.dependencies + Ryb::InternalDependency.new(product)
       end
 
       def add_external_dependency(lib_or_framework)
@@ -142,13 +134,122 @@ module Ryb
       end
     end
 
-    def self.for(spec)
-      # Build a class
-       # For every ancestor we know (http://stackoverflow.com/questions/1328068)
-        # Include
-      # Instance Eval
-      # Rewrite exceptions from Typespec/Pour into Ryb
-       # Attach source information (file, line)
+    class Configuration
+      def initialize(config)
+        @spec = @config = config
+      end
+
+      def prefix=(prefix)
+        @config.prefix = prefix
+      end
+
+      def suffix=(suffix)
+        @config.suffix = suffix
+      end
+
+      include Environment
+      include Preprocessor
+      include Flags
+      include Code
+      include Dependencies
+    end
+
+    class Platform < Configuration
+      def initialize(platform)
+        super(platform)
+        @platform = platform
+      end
+    end
+
+    class Architecture < Configuration
+      def initialize(arch)
+        super(arch)
+        @arch = arch
+      end
+    end
+
+    class Product
+      def initialize(product)
+        @spec = @product = product
+      end
+
+      def author=(author)
+        @product.author = author
+      end
+
+      def description=(description)
+        @product.description = description
+      end
+
+      def license=(license)
+        @product.license = license
+      end
+
+      def version=(version)
+        @product.version = version
+      end
+
+      include Configurations
+      include Environment
+      include Preprocessor
+      include Flags
+      include Code
+      include Dependencies
+    end
+
+    class Application < Product
+      def initialize(app)
+        super(app)
+        @app = app
+      end
+    end
+
+    class Library < Product
+      def initialize(lib)
+        super(lib)
+        @lib = lib
+      end
+
+      def linkage=(linkage)
+        @lib.linkage = linkage
+      end
+    end
+
+    class Project
+      def initialize(project)
+        @spec = @project = project
+      end
+
+      def application(name, opts={}, &block)
+        # TODO(mtwilliams): Verify uniqueness.
+        app = Ryb::Application.new
+        app.name = Ryb::Name.new(name, :pretty => opts[:pretty])
+        DomainSpecificLanguage.for(app).eval(&block)
+        @project.products = @project.products + app
+      end
+
+      def library(name, opts={}, &block)
+        # TODO(mtwilliams): Verify uniqueness.
+        lib = Ryb::Library.new
+        lib.name = Ryb::Name.new(name, :pretty => opts[:pretty])
+        DomainSpecificLanguage.for(lib).eval(&block)
+        @project.products = @project.products + lib
+      end
+    end
+
+    FOR = {Ryb::Configuration => Configuration,
+           Ryb::Platform      => Platform,
+           Ryb::Architecture  => Architecture,
+           Ryb::Application   => Application,
+           Ryb::Library       => Library,
+           Ryb::Project       => Project}
+
+    def self.for(obj)
+      # TODO(mtwilliams): Use `__poured__` rather than manually building?
+      # poured = spec.class_variable_get(:@@__poured__)
+
+      # Hide behind a SimpleDelegator so users don't play with our internals.
+      SimpleDelegator.new(FOR[obj.class].new(obj))
     end
   end
 end
