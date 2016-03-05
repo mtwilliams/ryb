@@ -3,7 +3,7 @@ module Ryb
     property :name, Typespec.t[Ryb::Name]
 
     pour Configurations
-    pour Enviornment
+    pour Environment
     pour Preprocessor
 
     property :products, Typespec.array[Typespec.t[Ryb::Product]]
