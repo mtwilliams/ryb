@@ -24,12 +24,17 @@ module Ryb
     end
 
     def self.language_from_path(path)
-      if ext = File.extname(path_or_ext)
+      if ext = File.extname(path)[1..-1]
         self.language_from_extension(ext)
       end
     end
 
-    EXTENSIONS_TO_LANGUAGE = {%w{c} => :c, %w{cc cpp cxx c++} => :cpp, %w{cs} => :csharp}
+    EXTENSIONS_TO_LANGUAGE = {%w{h}                 => :c,
+                              %w{c}                 => :c,
+                              %w{hh hpp hxx h++}    => :cpp,
+                              %w{cc cpp cxx c++}    => :cpp,
+                              %w{cs}                => :csharp}
+
     def self.language_from_extension(ext)
       EXTENSIONS_TO_LANGUAGE.each do |extensions, language|
         return language if extensions.include?(ext)
