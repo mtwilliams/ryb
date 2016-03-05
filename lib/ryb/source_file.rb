@@ -2,13 +2,17 @@ module Ryb
   class SourceFile
     attr_reader :path
     attr_reader :language
+    attr_reader :inconsequential
 
     def initialize(path, opts={})
-      super(path)
       @path = path
       @language = opts[:language] || SourceFile.language_from_path(path)
+      @inconsequential = SourceFile.inconsequential?(@path)
+
       # TODO(mtwilliams): Use Ryb::UnsupportedLanguage.
-      raise "..." unless Ryb::Languages.supported? @language
+      unless Ryb::Languages.supported?(@language)
+        raise "..." unless @inconsequential
+      end
     end
 
     def self.c(path)
@@ -38,6 +42,14 @@ module Ryb
     def self.language_from_extension(ext)
       EXTENSIONS_TO_LANGUAGE.each do |extensions, language|
         return language if extensions.include?(ext)
+      end
+    end
+
+    INCONSEQUENTIAL = %w{h hpp hxx h++ inl}
+
+    def self.inconsequential?(path)
+      if ext = File.extname(path)[1..-1]
+        INCONSEQUENTIAL.include? ext
       end
     end
   end
