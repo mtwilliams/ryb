@@ -3,47 +3,51 @@ module Ryb
     module Configurations
       def configuration(name, opts={}, &block)
         # TODO(mtwilliams): Refactor this.
-        existing_config = @spec.configurations.select do |existing_config|
+        @spec.configurations ||= []
+        existing_config = (@spec.configurations.select do |existing_config|
           existing_config.name.canonicalize == name
-        end
+        end).first
 
         config = existing_config || Ryb::Configuration.new
         config.name ||= Ryb::Name.new(name, :pretty => opts[:pretty])
 
-        DomainSpecificLanguage.for(config).eval(&block)
+        DomainSpecificLanguage.for(config).instance_eval(&block)
       end
 
       def platform(name, opts={}, &block)
         # TODO(mtwilliams): Refactor this.
-        existing_platform = @spec.platforms.select do |existing_platform|
+        @spec.platforms ||= []
+        existing_platform = (@spec.platforms.select do |existing_platform|
           existing_platform.name.canonicalize == name
-        end
+        end).first
 
         platform = existing_platform || Ryb::Platform.new
         platform.name ||= Ryb::Name.new(name, :pretty => opts[:pretty])
 
-        DomainSpecificLanguage.for(platform).eval(&block)
+        DomainSpecificLanguage.for(platform).instance_eval(&block)
       end
 
       def architecture(name, opts={}, &block)
         # TODO(mtwilliams): Refactor this.
-        existing_arch = @spec.architectures.select do |existing_arch|
+        @spec.architectures ||= []
+        existing_arch = (@spec.architectures.select do |existing_arch|
           existing_arch.name.canonicalize == name
-        end
+        end).first
 
         arch = existing_arch || Ryb::Architecture.new
         arch.name ||= Ryb::Name.new(name, :pretty => opts[:pretty])
 
-        DomainSpecificLanguage.for(arch).eval(&block)
+        DomainSpecificLanguage.for(arch).instance_eval(&block)
       end
     end
 
      module Environment
       def add_include_path(path)
-        @spec.paths.includes = @spec.paths.includes + path
+        @spec.paths ||= Paths.new
+        @spec.paths.includes = @spec.paths.includes + [path]
       end
 
-      def add_include_paths(paths_and_patterns)
+      def add_include_paths(*paths_and_patterns)
         [*paths_and_patterns].each do |path_or_pattern|
           [*(Dir.glob(path_or_pattern))].each do |path|
             add_include_path(path)
@@ -52,10 +56,11 @@ module Ryb
       end
 
       def add_library_path(path)
-        @spec.paths.libraries = @spec.paths.libraries + path
+        @spec.paths ||= Paths.new
+        @spec.paths.libraries = @spec.paths.libraries + [path]
       end
 
-      def add_library_paths(paths_and_patterns)
+      def add_library_paths(*paths_and_patterns)
         [*paths_and_patterns].each do |path_or_pattern|
           [*(Dir.glob(path_or_pattern))].each do |path|
             add_library_path(path)
@@ -64,10 +69,11 @@ module Ryb
       end
 
       def add_binary_path(path)
-        @spec.paths.binaries = @spec.paths.binaries + path
+        @spec.paths ||= Paths.new
+        @spec.paths.binaries = @spec.paths.binaries + [path]
       end
 
-      def add_binary_paths(paths_and_patterns)
+      def add_binary_paths(*paths_and_patterns)
         [*paths_and_patterns].each do |path_or_pattern|
           [*(Dir.glob(path_or_pattern))].each do |path|
             add_binary_path(path)
@@ -78,7 +84,8 @@ module Ryb
 
     module Preprocessor
       def define(defines)
-        @spec.defines = @spec.defines + defines
+        @spec.defines ||= Hash.new
+        @spec.defines = @spec.defines.merge(defines)
       end
     end
 
@@ -103,22 +110,23 @@ module Ryb
     module Code
       def add_source_file(file)
         case file
-          when String
-            @spec.sources = @spec.sources + SourceFile.new(file)
           when SourceFile
-            @spec.sources = @spec.sources + file
+            @spec.sources ||= []
+            @spec.sources = @spec.sources + [file]
+          when String
+            add_source_file(SourceFile.new(file))
           end
       end
 
-      def add_source_files(files_and_patterns)
+      def add_source_files(*files_and_patterns)
         [*files_and_patterns].each do |file_or_pattern|
           case file_or_pattern
+            when SourceFile
+              add_source_file(file_or_pattern)
             when String
               [*(Dir.glob(file_or_pattern))].each do |file|
                 add_source_file(file)
               end
-            when SourceFile
-              add_source_file(file_or_pattern)
             end
         end
       end
@@ -126,7 +134,8 @@ module Ryb
 
     module Dependencies
       def add_dependency(product)
-        @spec.dependencies = @spec.dependencies + Ryb::InternalDependency.new(product)
+        @spec.dependencies ||= []
+        @spec.dependencies = @spec.dependencies + [Ryb::InternalDependency.new(product)]
       end
 
       def add_external_dependency(lib_or_framework)
@@ -220,20 +229,26 @@ module Ryb
         @spec = @project = project
       end
 
+      include Configurations
+      include Environment
+      include Preprocessor
+
       def application(name, opts={}, &block)
         # TODO(mtwilliams): Verify uniqueness.
         app = Ryb::Application.new
         app.name = Ryb::Name.new(name, :pretty => opts[:pretty])
-        DomainSpecificLanguage.for(app).eval(&block)
-        @project.products = @project.products + app
+        DomainSpecificLanguage.for(app).instance_eval(&block)
+        @project.products ||= []
+        @project.products = @project.products + [app]
       end
 
       def library(name, opts={}, &block)
         # TODO(mtwilliams): Verify uniqueness.
         lib = Ryb::Library.new
         lib.name = Ryb::Name.new(name, :pretty => opts[:pretty])
-        DomainSpecificLanguage.for(lib).eval(&block)
-        @project.products = @project.products + lib
+        DomainSpecificLanguage.for(lib).instance_eval(&block)
+        @project.products ||= []
+        @project.products = @project.products + [lib]
       end
     end
 

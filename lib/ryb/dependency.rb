@@ -4,6 +4,10 @@ module Ryb
 
   class InternalDependency < Dependency
     property :product, Typespec.symbol
+
+    def initialize(product)
+      self.product = product
+    end
   end
 
   class ExternalDependency < Dependency

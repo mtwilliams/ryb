@@ -1,23 +1,34 @@
+require 'rbconfig'
+require 'delegate'
+
+require 'pour'
+
 module Ryb
-  require 'rybfile'
-
   require 'ryb/gem'
-  require 'ryb/cli'
 
+  require 'ryb/helpers/defaults'
   require 'ryb/helpers/pretty_string'
 
   require 'ryb/name'
+  require 'ryb/paths'
   require 'ryb/languages'
   require 'ryb/source_file'
 
-  require 'ryb/code'
-  require 'ryb/project'
-  require 'ryb/product'
-  require 'ryb/configuration'
-  require 'ryb/configurations'
   require 'ryb/environment'
-  require 'ryb/preprocessor'
   require 'ryb/flags'
+  require 'ryb/preprocessor'
+  require 'ryb/code'
   require 'ryb/dependency'
   require 'ryb/dependencies'
+  require 'ryb/configuration'
+  require 'ryb/configurations'
+  require 'ryb/product'
+  require 'ryb/project'
+
+  require 'ryb/dsl'
+  require 'rybfile'
+
+  require 'ryb/ninja'
+
+  require 'ryb/cli'
 end

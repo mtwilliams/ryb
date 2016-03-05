@@ -7,7 +7,7 @@ module Ryb
     end
 
     def self.supported?(language)
-      SUPPORTED.include?(language)
+      supported.include?(language)
     end
   end
 end

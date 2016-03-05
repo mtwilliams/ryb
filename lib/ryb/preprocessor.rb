@@ -1,6 +1,6 @@
 module Ryb
   module Preprocessor
-    include Pourable
+    include Pour::Pourable
 
     property :defines, Typespec.hash[Typespec.string => Typespec.or[Typespec.nothing,
                                                                     Typespec.boolean,

@@ -22,12 +22,12 @@ Gem::Specification.new do |s|
   s.add_dependency 'gli', '~> 2'
 
   s.add_dependency 'pour'
-  s.add_dependency 'pidgin'
+# s.add_dependency 'pidgin'
 
-  # s.add_dependency 'visual_studio', '~> 0.1'
-  # s.add_dependency 'xcode4'
-  # s.add_dependency 'ninja'
-  # s.add_dependency 'gmake'
+# s.add_dependency 'visual_studio', '~> 0.1'
+# s.add_dependency 'xcode4'
+  s.add_dependency 'ninja'
+# s.add_dependency 'gmake'
 
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'cucumber'

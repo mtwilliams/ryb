@@ -40,7 +40,7 @@ module Ryb
         vs.desc 'Generate Visual Studio project files'
         vs.long_desc 'Generates Visual Studio projects files, based on a Rybfile.'
         vs.action do |global_opts, opts, args|
-          rybfile = Rybfile.load(args.unshift || "Rybfile")
+          rybfile = Rybfile.load(args.shift || "Rybfile")
           raise "Not implemented, yet."
         end
       end
@@ -50,7 +50,7 @@ module Ryb
         xcode.desc 'Generate XCode project files'
         xcode.long_desc 'Generates XCode projects files, based on a Rybfile.'
         xcode.action do |global_opts, opts, args|
-          rybfile = Rybfile.load(args.unshift || "Rybfile")
+          rybfile = Rybfile.load(args.shift || "Rybfile")
           raise "Not implemented, yet."
         end
       end
@@ -60,7 +60,7 @@ module Ryb
         gmake.desc 'Generate GNU Makefiles'
         gmake.long_desc 'Generates GNU Makefiles, based on a Rybfile.'
         gmake.action do |global_opts, opts, args|
-          rybfile = Rybfile.load(args.unshift || "Rybfile")
+          rybfile = Rybfile.load(args.shift || "Rybfile")
           raise "Not implemented, yet."
         end
       end
@@ -73,8 +73,29 @@ module Ryb
                           :type => String,
                           :arg_name => 'for',
                           :desc => 'The toolchain to use'
+
         ninja.action do |global_opts, opts, args|
-          raise "Not implemented, yet."
+          rybfile = Rybfile.load(args.shift || "Rybfile")
+
+          # # TODO(mtwilliams): Refactor out.
+          # # TODO(mtwilliams): Verify every platform+architecture is supported.
+          # targets = [*global_opts[:targets].split(';')].flat_map { |platform, architectures|
+          #   architectures = [*(architectures.split(',') || ['*'])]
+          #   [].fill(platform, 0, architectures.length).zip(architectures)
+          # }
+
+          # toolchains = begin
+          #   pairings = global_opts[:toolchains].split(',')
+          #   Hash[pairings.map { |pairing|
+          #     platform, toolchain = *pairing.split(':')
+          #     [platform, toolchain]
+          #   }]
+          # end
+
+          Ryb::Ninja.generate_from(rybfile, root: global_opts[:root],
+                                            build: global_opts[:build],
+                                            targets: ['windows'],
+                                            toolchains: ['msvc'])
         end
       end
     end

@@ -14,7 +14,7 @@ class Rybfile < Pour::Mould
       @rybfile.project = Ryb::Project.new
       @rybfile.project.name = Ryb::Name.new(name, :pretty => opts[:pretty])
 
-      DomainSpecificLanguage.for(@rybfile.project).instance_eval(&block)
+      Ryb::DomainSpecificLanguage.for(@rybfile.project).instance_eval(&block)
     end
 
     def self.for(rybfile)
@@ -28,7 +28,7 @@ class Rybfile < Pour::Mould
 
     # TODO(mtwilliams): Rewrite exceptions from Typespec/Pour into Ryb and attach
     # source information (the file and line number from the responsible Rybfile.)
-    DomainSpecificLanguage.for(rybfile).instance_eval("lambda {#{File.read(rybfile)}}")
+    DomainSpecificLanguage.for(rybfile).instance_eval(File.read(path), path)
 
     rybfile
   end
