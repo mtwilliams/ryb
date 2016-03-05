@@ -9,7 +9,7 @@ module Ryb
       # @param [String] str The string.
       # @param opts [String] :pretty A more readable description of the string.
       def initialize(str, opts={})
-        super(str)
+        super(str.to_s)
         @pretty = opts[:pretty] if opts.include? :pretty
       end
 
