@@ -12,7 +12,7 @@ module Ryb
     #                                        :private => Typespec.string]
 
     pour Configurations
-    pour Enviornment
+    pour Environment
     pour Preprocessor
     pour Flags
 

@@ -5,7 +5,7 @@ module Ryb
     property :prefix, Typespec.string
     property :suffix, Typespec.string
 
-    pour Enviornment
+    pour Environment
     pour Preprocessor
     pour Flags
 
