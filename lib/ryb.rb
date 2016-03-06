@@ -30,6 +30,7 @@ module Ryb
   require 'rybfile'
   require 'rybfile/walker'
 
+  require 'ryb/visual_studio'
   require 'ryb/ninja'
 
   require 'ryb/cli'
