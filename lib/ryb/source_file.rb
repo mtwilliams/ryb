@@ -15,6 +15,11 @@ module Ryb
       end
     end
 
+    alias :eql? :==
+    def ==(other)
+      self.path == other.path
+    end
+
     def self.c(path)
       SourceFile.new(path, :language => :c)
     end
