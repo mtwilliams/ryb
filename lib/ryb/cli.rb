@@ -15,10 +15,10 @@ module Ryb
     program_long_desc Ryb::Gem.description
 
     desc ''
-    flag [:root], :default_value => './'
+    flag [:root], :default_value => '.'
 
     desc ''
-    flag [:build], :default_value => '_build/'
+    flag [:build], :default_value => '_build'
 
   # TODO(mtwilliams): Use a proper logger.
   # switch :verbose, :default => false,
