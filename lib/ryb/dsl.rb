@@ -41,7 +41,7 @@ module Ryb
       end
     end
 
-     module Environment
+    module Environment
       def add_include_path(path)
         @spec.paths ||= Paths.new
         @spec.paths.includes = @spec.paths.includes + [path]
