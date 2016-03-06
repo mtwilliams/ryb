@@ -11,6 +11,8 @@ module Ryb
         config = existing_config || Ryb::Configuration.new
         config.name ||= Ryb::Name.new(name, :pretty => opts[:pretty])
 
+        @spec.configurations << config unless existing_config
+
         DomainSpecificLanguage.for(config).instance_eval(&block)
       end
 
@@ -24,6 +26,8 @@ module Ryb
         platform = existing_platform || Ryb::Platform.new
         platform.name ||= Ryb::Name.new(name, :pretty => opts[:pretty])
 
+        @spec.platforms << platform unless existing_platform
+
         DomainSpecificLanguage.for(platform).instance_eval(&block)
       end
 
@@ -36,6 +40,8 @@ module Ryb
 
         arch = existing_arch || Ryb::Architecture.new
         arch.name ||= Ryb::Name.new(name, :pretty => opts[:pretty])
+
+        @spec.architectures << arch unless existing_arch
 
         DomainSpecificLanguage.for(arch).instance_eval(&block)
       end
