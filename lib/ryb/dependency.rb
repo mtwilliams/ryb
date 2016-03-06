@@ -8,6 +8,11 @@ module Ryb
     def initialize(product)
       self.product = product
     end
+
+    alias :eql? :==
+    def ==(other)
+      self.product == other.product
+    end
   end
 
   class ExternalDependency < Dependency
