@@ -43,6 +43,7 @@ module Ryb
       EXTENSIONS_TO_LANGUAGE.each do |extensions, language|
         return language if extensions.include?(ext)
       end
+      :unknown
     end
 
     INCONSEQUENTIAL = %w{h hpp hxx h++ inl}
