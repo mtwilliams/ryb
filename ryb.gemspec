@@ -24,7 +24,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'pour'
 # s.add_dependency 'pidgin'
 
-# s.add_dependency 'visual_studio', '~> 0.1'
+  s.add_dependency 'visual_studio'
 # s.add_dependency 'xcode4'
   s.add_dependency 'ninja'
 # s.add_dependency 'gmake'
