@@ -1,6 +1,6 @@
 require 'rbconfig'
 require 'delegate'
-
+require 'hashie'
 require 'pour'
 
 module Ryb
@@ -26,7 +26,9 @@ module Ryb
   require 'ryb/project'
 
   require 'ryb/dsl'
+
   require 'rybfile'
+  require 'rybfile/walker'
 
   require 'ryb/ninja'
 

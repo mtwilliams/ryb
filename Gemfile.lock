@@ -3,7 +3,7 @@ PATH
   specs:
     ryb (0.2.0.1)
       gli (~> 2)
-      ninja
+      ninja-gen
       pour
       visual_studio
 
@@ -39,7 +39,7 @@ GEM
     gli (2.13.4)
     multi_json (1.11.2)
     multi_test (0.1.2)
-    ninja (0.1)
+    ninja-gen (0.1.1.1)
     pour (0.0.3.1)
       typespec
     rspec (3.4.0)

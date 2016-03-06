@@ -1,0 +1,4 @@
+- How should we handle conflicts between say, a Ryb::Configuration and a Ryb::Platform?
+- Memoization.
+ - http://www.justinweiss.com/articles/4-simple-memoization-patterns-in-ruby-and-one-gem/
+ - http://gavinmiller.io/2013/basics-of-ruby-memoization/
