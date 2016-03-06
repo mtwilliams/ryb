@@ -2,14 +2,12 @@ module Ryb
   module DomainSpecificLanguage
     module Configurations
       def configuration(name, opts={}, &block)
-        # TODO(mtwilliams): Refactor this.
         @spec.configurations ||= []
-        existing_config = (@spec.configurations.select do |existing_config|
-          existing_config.name.canonicalize == name
-        end).first
 
+        existing_config = find_by_canonical_name(@spec.configurations, name)
         config = existing_config || Ryb::Configuration.new
-        config.name ||= Ryb::Name.new(name, :pretty => opts[:pretty])
+        existing_pretty_name = config.name.pretty if existing_config
+        config.name = Ryb::Name.new(name, :pretty => existing_pretty_name || opts[:pretty])
 
         @spec.configurations << config unless existing_config
 
@@ -19,12 +17,11 @@ module Ryb
       def platform(name, opts={}, &block)
         # TODO(mtwilliams): Refactor this.
         @spec.platforms ||= []
-        existing_platform = (@spec.platforms.select do |existing_platform|
-          existing_platform.name.canonicalize == name
-        end).first
 
+        existing_platform = find_by_canonical_name(@spec.platforms, name)
         platform = existing_platform || Ryb::Platform.new
-        platform.name ||= Ryb::Name.new(name, :pretty => opts[:pretty])
+        existing_pretty_name = platform.name.pretty if existing_platform
+        platform.name ||= Ryb::Name.new(name, :pretty => existing_pretty_name || opts[:pretty])
 
         @spec.platforms << platform unless existing_platform
 
@@ -34,17 +31,23 @@ module Ryb
       def architecture(name, opts={}, &block)
         # TODO(mtwilliams): Refactor this.
         @spec.architectures ||= []
-        existing_arch = (@spec.architectures.select do |existing_arch|
-          existing_arch.name.canonicalize == name
-        end).first
 
+        existing_arch = find_by_canonical_name(@spec.architectures, name)
         arch = existing_arch || Ryb::Architecture.new
-        arch.name ||= Ryb::Name.new(name, :pretty => opts[:pretty])
+        existing_pretty_name = arch.name.pretty if existing_arch
+        arch.name ||= Ryb::Name.new(name, :pretty => existing_pretty_name || opts[:pretty])
 
         @spec.architectures << arch unless existing_arch
 
         DomainSpecificLanguage.for(arch).instance_eval(&block)
       end
+
+      private
+        def find_by_canonical_name(ary_of_named_things, name)
+          (ary_of_named_things.select do |existing_thing|
+              existing_thing.name.canonicalize == name.to_s
+            end).first
+        end
     end
 
     module Environment
