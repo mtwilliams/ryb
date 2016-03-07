@@ -148,7 +148,8 @@ module Ryb
       end
 
       def add_external_dependency(lib_or_framework)
-        raise "Not implemented, yet."
+        @spec.dependencies ||= []
+        @spec.dependencies = @spec.dependencies + [Ryb::ExternalDependency.new(lib_or_framework)]
       end
     end
 
