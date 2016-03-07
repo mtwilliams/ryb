@@ -163,7 +163,7 @@ class Rybfile
         merged.defines.merge!(base.defines) if base and base.defines
         merged.defines.merge!(overlay.defines) if overlay and overlay.defines
 
-        merged.treat_warnings_as_errors = true
+        merged.treat_warnings_as_errors = false
         merged.generate_debug_symbols = false
         merged.link_time_code_generation = false
         merged.optimize = :nothing

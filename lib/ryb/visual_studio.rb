@@ -15,7 +15,7 @@ module Ryb
       ]
 
       def self.include_paths_to_flags(paths)
-        [*paths].map{|path| "/I#{path}"}
+        [*paths].map{|path| "/I\"#{path}\""}
       end
 
       def self.defines_to_flags(defines)
@@ -27,7 +27,7 @@ module Ryb
             when FalseClass
               "/D#{name}=0"
             when Integer
-              "/D#{name}=#{value.to_s}"
+              "/D#{name}=#{value}"
             when String
               "/D#{name}=#{value.to_s}"
             else
@@ -41,7 +41,9 @@ module Ryb
       end
 
       def self.generate_debug_symbols_to_flag(enabled)
-        enabled ? %w{/MDd /Fi} : %w{/MD}
+        # HACK(mtwilliams): Force writes to PDBs to be serialized.
+        # Refer to https://msdn.microsoft.com/en-us/library/dn502518.aspx.
+        enabled ? %w{/MDd /Zi /FS} : %w{/MD}
       end
 
       def self.link_time_code_generation_to_flag(enabled)
@@ -58,6 +60,18 @@ module Ryb
             %w{/Ox /fp:fast /fp:except-}
           end
       end
+
+      def self.architecture_to_flags(architecture)
+        case architecture
+          when :x86
+            %w{/arch:IA32}
+          when :x86_64
+            # TODO(mtwilliams): Determine if we can specify a minimum of SSE2?
+            []
+          else
+            []
+          end
+      end
     end
 
     module Linker
@@ -69,11 +83,20 @@ module Ryb
       ]
 
       def self.library_paths_to_flags(paths)
-        [*paths].map{|path| "/LIBPATH:#{path}"}
+        [*paths].map{|path| "/LIBPATH:\"#{path}\""}
       end
 
       def self.generate_debug_symbols_to_flag(enabled)
         enabled ? %w{/DEBUG} : %w{}
+      end
+
+      def self.architecture_to_flags(architecture)
+        case architecture
+          when :x86
+            %w{/machine:X86}
+          when :x86_64
+            %w{/machine:X64}
+          end
       end
     end
   end

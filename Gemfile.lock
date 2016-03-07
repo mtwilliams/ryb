@@ -3,6 +3,7 @@ PATH
   specs:
     ryb (0.2.0.1)
       gli (~> 2)
+      hashie
       ninja-gen
       pour
       visual_studio
@@ -37,6 +38,7 @@ GEM
     ffi (1.9.10-x86-mingw32)
     gherkin (3.2.0)
     gli (2.13.4)
+    hashie (3.4.3)
     multi_json (1.11.2)
     multi_test (0.1.2)
     ninja-gen (0.1.1.1)
@@ -57,7 +59,7 @@ GEM
     rspec-support (3.4.1)
     thor (0.19.1)
     typespec (0.1.0.8)
-    visual_studio (0.1.0.1)
+    visual_studio (0.1.0.2)
 
 PLATFORMS
   ruby

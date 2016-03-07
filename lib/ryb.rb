@@ -2,6 +2,8 @@ require 'rbconfig'
 require 'delegate'
 require 'hashie'
 require 'pour'
+require 'visual_studio'
+require 'ninja'
 
 module Ryb
   require 'ryb/gem'
