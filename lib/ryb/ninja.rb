@@ -176,6 +176,7 @@ module Ryb
                   cflags_for_architecture(tripletised.architecture)
           flags += VisualStudio::Compiler.include_paths_to_flags(product.paths.includes) if product.paths
           flags += VisualStudio::Compiler.defines_to_flags(project.defines)
+          flags += VisualStudio::Compiler.defines_to_flags(product.defines)
           flags += VisualStudio::Compiler.architecture_to_flags(tripletised.architecture.name.to_sym)
           flags
         end
