@@ -147,9 +147,19 @@ module Ryb
         @spec.dependencies = @spec.dependencies + [Ryb::InternalDependency.new(product)]
       end
 
-      def add_external_dependency(lib_or_framework)
+      def add_dependencies(products)
+        [*products].each(&self.add_dependency)
+      end
+
+      def add_external_dependency(lib_or_framework, opts={})
         @spec.dependencies ||= []
-        @spec.dependencies = @spec.dependencies + [Ryb::ExternalDependency.new(lib_or_framework)]
+        @spec.dependencies = @spec.dependencies + [Ryb::ExternalDependency.new(lib_or_framework, opts)]
+      end
+
+      def add_external_dependencies(libs_and_frameworks, opts={})
+        [*libs_and_frameworks].each do |lib_or_framework|
+          self.add_external_dependency(lib_or_framework, opts)
+        end
       end
     end
 

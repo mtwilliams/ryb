@@ -144,7 +144,9 @@ module Ryb
               when Ryb::InternalDependency
                 "${#{dep.product}_#{tripletised.triplet.join('_')}_as_linkable}"
               when Ryb::ExternalDependency
-                dep.lib_or_framework
+                triplet = [tripletised.configuration, tripletised.platform, tripletised.architecture].map(&:name).map(&:to_sym)
+                mangled = dep.mangled(*triplet)
+                "#{mangled}.lib"
               end
           end
         end
