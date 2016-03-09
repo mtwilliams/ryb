@@ -176,6 +176,7 @@ module Ryb
                   cflags_for_configuration(tripletised.configuration) +
                   cflags_for_platform(tripletised.platform) +
                   cflags_for_architecture(tripletised.architecture)
+          flags += VisualStudio::Compiler.include_paths_to_flags(project.paths.includes) if project.paths
           flags += VisualStudio::Compiler.include_paths_to_flags(product.paths.includes) if product.paths
           flags += VisualStudio::Compiler.defines_to_flags(project.defines)
           flags += VisualStudio::Compiler.defines_to_flags(product.defines)
@@ -187,11 +188,13 @@ module Ryb
           %w{/nologo}
         end
 
-        def ldflags_for_product(_project, product, tripletised)
+        def ldflags_for_product(project, product, tripletised)
           flags = VisualStudio::Linker::STANDARD_FLAGS +
                   ldflags_for_configuration(tripletised.configuration) +
                   ldflags_for_platform(tripletised.platform) +
                   ldflags_for_architecture(tripletised.architecture)
+          flags += VisualStudio::Linker.library_paths_to_flags(project.paths.libraries) if project.paths
+          flags += VisualStudio::Linker.library_paths_to_flags(product.paths.libraries) if product.paths
           flags += VisualStudio::Linker.architecture_to_flags(tripletised.architecture.name.to_sym)
           # TODO: Linkage.
           flags
