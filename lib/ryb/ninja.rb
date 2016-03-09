@@ -18,6 +18,9 @@ module Ryb
       end
 
       def generate
+        @ninjafile.rule "mv", "move /Y $in $out"
+        @ninjafile.rule "cp", "move /Y /B $in $out"
+
         @ninjafile.save(@path)
       end
 
@@ -115,12 +118,15 @@ module Ryb
         case product
           when Ryb::Application
             @ninjafile.build "ld_#{namespace}", {artifacts[0] => c_objects + cxx_objects}
+            @ninjafile.alias namespace, artifacts[0]
           when Ryb::Library
             case product.linkage
               when :static
                 @ninjafile.build "ar_#{namespace}", {artifacts[0] => c_objects + cxx_objects}
+                @ninjafile.alias namespace, artifacts[0]
               when :dynamic
                 @ninjafile.build "so_#{namespace}", {artifacts[1] => c_objects + cxx_objects}
+                @ninjafile.alias namespace, artifacts[1]
               end
           end
       end
