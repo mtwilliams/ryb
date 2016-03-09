@@ -41,7 +41,7 @@ module Ryb
     end
 
     module VERSION #:nodoc:
-      MAJOR, MINOR, PATCH, PRE = [0, 2, 0, 3]
+      MAJOR, MINOR, PATCH, PRE = [0, 2, 1, 0]
       STRING = [MAJOR, MINOR, PATCH, PRE].compact.join('.')
     end
 
