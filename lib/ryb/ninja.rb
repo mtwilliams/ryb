@@ -101,7 +101,7 @@ module Ryb
 
         @ninjafile.rule(
           "so_#{namespace}",
-          "ninja -t msvc -e #{env_block} -- link.exe $#{namespace}_ldflags_sys $#{namespace}_ldflags /DLL /OUT:$out $#{namespace}_deps $in"
+          "ninja -t msvc -e #{env_block} -- link.exe $#{namespace}_ldflags_sys $#{namespace}_ldflags /DLL /IMPLIB:$#{namespace}_as_linkable /OUT:$out $#{namespace}_deps $in"
         )
 
         c_sources = sources.select{|src| src.language == :c}.map(&:path).map{|src| "#@root/#{src}"}
