@@ -84,12 +84,14 @@ module Ryb
 
         @ninjafile.rule(
           "cc_#{namespace}",
-          "ninja -t msvc -e #{env_block} -- cl.exe $#{namespace}_cflags_sys $#{namespace}_cflags /Fd$#{namespace}_symbols /Fo$out /Tc$in"
+          "ninja -t msvc -e #{env_block} -- cl.exe $#{namespace}_cflags_sys /showIncludes $#{namespace}_cflags /Fd$#{namespace}_symbols /Fo$out /Tc$in",
+          dependencies: :msvc
         )
 
         @ninjafile.rule(
           "cxx_#{namespace}",
-          "ninja -t msvc -e #{env_block} -- cl.exe $#{namespace}_cxxflags_sys $#{namespace}_cxxflags /Fd$#{namespace}_symbols /Fo$out /Tp$in"
+          "ninja -t msvc -e #{env_block} -- cl.exe $#{namespace}_cxxflags_sys /showIncludes $#{namespace}_cxxflags /Fd$#{namespace}_symbols /Fo$out /Tp$in",
+          dependencies: :msvc
         )
 
         @ninjafile.rule(
