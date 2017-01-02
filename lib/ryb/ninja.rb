@@ -84,29 +84,32 @@ module Ryb
 
         @ninjafile.rule(
           "cc_#{namespace}",
-          "ninja -t msvc -e #{env_block} -- cl.exe $#{namespace}_cflags_sys /showIncludes $#{namespace}_cflags /Fd$#{namespace}_symbols /Fo$out /Tc$in",
+          "ninja -t msvc -e #{env_block} -- cl.exe /showIncludes $#{namespace}_cflags_sys $#{namespace}_cflags /Fd$#{namespace}_symbols /Fo$out /Tc$in",
           dependencies: :msvc
         )
 
         @ninjafile.rule(
           "cxx_#{namespace}",
-          "ninja -t msvc -e #{env_block} -- cl.exe $#{namespace}_cxxflags_sys /showIncludes $#{namespace}_cxxflags /Fd$#{namespace}_symbols /Fo$out /Tp$in",
+          "ninja -t msvc -e #{env_block} -- cl.exe /showIncludes $#{namespace}_cxxflags_sys $#{namespace}_cxxflags /Fd$#{namespace}_symbols /Fo$out /Tp$in",
           dependencies: :msvc
         )
 
         @ninjafile.rule(
           "ar_#{namespace}",
-          "ninja -t msvc -e #{env_block} -- lib.exe $#{namespace}_arflags /OUT:$out $in"
+          "ninja -t msvc -e #{env_block} -- lib.exe @$out.rsp",
+          response_file: "$#{namespace}_arflags /OUT:$out $in"
         )
 
         @ninjafile.rule(
           "ld_#{namespace}",
-          "ninja -t msvc -e #{env_block} -- link.exe $#{namespace}_ldflags_sys $#{namespace}_ldflags /OUT:$out $#{namespace}_deps $in"
+          "ninja -t msvc -e #{env_block} -- link.exe @$out.rsp",
+          response_file: "$#{namespace}_ldflags_sys $#{namespace}_ldflags /OUT:$out $#{namespace}_deps $in"
         )
 
         @ninjafile.rule(
           "so_#{namespace}",
-          "ninja -t msvc -e #{env_block} -- link.exe $#{namespace}_ldflags_sys $#{namespace}_ldflags /DLL /IMPLIB:$#{namespace}_as_linkable /OUT:$out $#{namespace}_deps $in"
+          "ninja -t msvc -e #{env_block} -- link.exe @$out.rsp",
+          response_file: "$#{namespace}_ldflags_sys $#{namespace}_ldflags /DLL /IMPLIB:$#{namespace}_as_linkable /OUT:$out $#{namespace}_deps $in"
         )
 
         c_sources = sources.select{|src| src.language == :c}.map(&:path).map{|src| "#@root/#{src}"}
