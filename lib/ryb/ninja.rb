@@ -48,7 +48,7 @@ module Ryb
         name = product.name.canonicalize
         namespace = "#{name}_#{tripletised.triplet.join('_')}"
 
-        sdk = @vc.sdks[:windows].select{|sdk| sdk.version == '7.1'}.first
+        sdk = @vc.sdks[:windows].select{|sdk| sdk.version.to_f >= 7.1}.first
         sys_include_paths = @vc.includes + sdk.includes
         sys_lib_paths = @vc.libraries[arch] + sdk.libraries[arch]
 
@@ -137,6 +137,49 @@ module Ryb
       end
 
       private
+        def environment
+          variables = [
+            'ALLUSERSPROFILE',
+            'APPDATA',
+            'CommonProgramFiles',
+            'CommonProgramFiles(x86)',
+            'CommonProgramW6432',
+            'ComSpec',
+            'HOMEDRIVE',
+            'HOMEPATH',
+            'LOCALAPPDATA',
+            'Path',
+            'PATHEXT',
+            'ProgramData',
+            'ProgramFiles',
+            'ProgramFiles(x86)',
+            'ProgramW6432',
+            'PUBLIC',
+            'SystemDrive',
+            'SystemRoot',
+            'TEMP',
+            'TMP',
+            'USERDOMAIN',
+            'USERNAME',
+            'USERPROFILE',
+            'windir'
+          ]
+
+          @environment ||= begin
+            require 'win32/registry'
+            ::Win32::Registry::HKEY_LOCAL_MACHINE.open("SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment", ::Win32::Registry::KEY_READ) do |originals|
+              variables.map { |variable|
+                value = begin
+                  originals[variable]
+                rescue
+                  ENV[variable]
+                end
+                [variable, value]
+              }.to_h
+            end
+          end
+        end
+
         def sources_for_product(product, tripletised)
           sources = [*product.sources] |
                     [*tripletised.configuration.sources] |
