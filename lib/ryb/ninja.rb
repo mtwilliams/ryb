@@ -53,6 +53,7 @@ module Ryb
         sys_lib_paths = @vc.libraries[arch] + sdk.libraries[arch]
 
         @ninjafile.variable "#{namespace}_cflags_sys", VisualStudio::Compiler.include_paths_to_flags(sys_include_paths).join(' ')
+        @ninjafile.variable "#{namespace}_cxxflags_sys", "$#{namespace}_cflags_sys"
         @ninjafile.variable "#{namespace}_ldflags_sys", VisualStudio::Linker.library_paths_to_flags(sys_lib_paths).join(' ')
 
         cflags = cflags_for_product(project, product, tripletised)
