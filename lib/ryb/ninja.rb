@@ -77,9 +77,8 @@ module Ryb
         @ninjafile.variable "#{namespace}_symbols", artifacts[0].gsub(/\.(exe|lib|dll)/, ".pdb")
 
         # https://github.com/ninja-build/ninja/blob/d1763746b65cc7349d4ed9478befdb651aa24589/src/msvc_helper_main-win32.cc#L38
-        # ninja -t msvc -e _build/#{namespace}.env -- cl.exe ...
         env_block = "#@build/#{namespace}.env_block"
-        env = @vc.environment(target: {platform: :windows, architecture: arch})
+        env = @vc.environment(target: {platform: :windows, architecture: arch}, base: environment)
         # "PATH=#{(@vc.binaries[arch] + sdk.binaries[arch]).join(';')}\0"
         File.write(env_block, env.map{|env_var, value| "#{env_var}=#{value}"}.join("\0"))
 
