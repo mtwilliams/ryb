@@ -41,6 +41,8 @@ module Ryb
       end
 
       def self.generate_debug_symbols_to_flag(enabled)
+        # TODO(mtwilliams): Don't link to debug runtime.
+         # Do I need to expose another flag?
         # HACK(mtwilliams): Force writes to PDBs to be serialized.
         # Refer to https://msdn.microsoft.com/en-us/library/dn502518.aspx.
         enabled ? %w{/MDd /Zi /FS} : %w{/MD}

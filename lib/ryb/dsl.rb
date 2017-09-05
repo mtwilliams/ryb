@@ -117,24 +117,24 @@ module Ryb
     end
 
     module Code
-      def add_source_file(file)
+      def add_source_file(file, **options)
         case file
           when SourceFile
             @spec.sources ||= []
             @spec.sources = @spec.sources + [file]
           when String
-            add_source_file(SourceFile.new(file))
+            add_source_file(SourceFile.new(file, options))
           end
       end
 
-      def add_source_files(*files_and_patterns)
+      def add_source_files(*files_and_patterns, **options)
         [*files_and_patterns].each do |file_or_pattern|
           case file_or_pattern
             when SourceFile
-              add_source_file(file_or_pattern)
+              add_source_file(file_or_pattern, options)
             when String
               [*(Dir.glob(file_or_pattern))].each do |file|
-                add_source_file(file)
+                add_source_file(file, options)
               end
             end
         end
